@@ -1,0 +1,3 @@
+﻿centos7 设置启动级别
+	rm /etc/systemd/system/default.target
+	ln -sf /lib/systemd/system/multi-user.target /etc/systemd/system/default.target 
