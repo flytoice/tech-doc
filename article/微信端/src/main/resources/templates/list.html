@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>天润文章列表</title>
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<link href="css/list.css" rel="stylesheet" />
+<script src="js/jquery.min.js"></script>
+<script src="js/iscroll.js"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+	var myScroll, pullDownEl, pullDownOffset, pullUpEl, pullUpOffset, generatedCount = 0;
+	var typeId = [[${typeId}]];
+	var curPage_g=[[${pageNumber}]];
+	var pages=[[${pages}]];
+	function pullDownAction() {
+		myScroll.refresh();
+	}
+	//上拉加载
+	function pullUpAction() {
+		if (curPage_g<pages){
+			$('#pullUp').show();
+			loadData(curPage_g);
+			$('#pullUp').hide();
+		} else {
+			myScroll.refresh();
+		}
+	}
+	
+	function loadData(curPage){
+		$.ajax({
+			type : "GET",
+			url : "titlesByPage",
+			data : {
+				"id" : typeId,
+				"pageNum" : curPage+1
+			},
+			success : function(data) {
+				var titles = eval(data);
+				var el, li, i;
+				el = document.getElementById('thelist');
+				
+				$.each(titles, function(index, list) {
+					li = document.createElement('li');
+					
+					li.innerHTML='<a href="'+list["addr"]+ '" target="_blank">'+list["title"]+'</a>';
+					el.appendChild(li, el.childNodes[0]);
+				});
+				myScroll.refresh();
+				curPage_g=curPage+1;
+			},
+			dataType : "json",
+			async : false
+		});
+	}
+	
+	
+	function loaded() {
+		pullDownEl = document.getElementById('pullDown');
+		pullDownOffset = pullDownEl.offsetHeight;
+		pullUpEl = document.getElementById('pullUp');
+		pullUpOffset = pullUpEl.offsetHeight;
+
+		myScroll = new iScroll(
+				'wrapper',
+				{
+					useTransition : true,
+					topOffset : pullDownOffset,
+					onRefresh : function() {
+						if (pullDownEl.className.match('loading')) {
+							pullDownEl.className = '';
+							pullDownEl.querySelector('.pullDownLabel').innerHTML = '';
+						} else if (pullUpEl.className.match('loading')) {
+							pullUpEl.className = '';
+							pullUpEl.querySelector('.pullUpLabel').innerHTML = '';
+						}
+					},
+					onScrollMove : function() {
+						if (this.y > 5 && !pullDownEl.className.match('flip')) {
+							pullDownEl.className = 'flip';
+							pullDownEl.querySelector('.pullDownLabel').innerHTML = '松开加载';
+							this.minScrollY = 0;
+						} else if (this.y < 5
+								&& pullDownEl.className.match('flip')) {
+							pullDownEl.className = '';
+							pullDownEl.querySelector('.pullDownLabel').innerHTML = '';
+							this.minScrollY = -pullDownOffset;
+						} else if (this.y < (this.maxScrollY - 5)
+								&& !pullUpEl.className.match('flip')) {
+							pullUpEl.className = 'flip';
+							pullUpEl.querySelector('.pullUpLabel').innerHTML = '松开加载';
+							this.maxScrollY = this.maxScrollY;
+						} else if (this.y > (this.maxScrollY + 5)
+								&& pullUpEl.className.match('flip')) {
+							pullUpEl.className = '';
+							pullUpEl.querySelector('.pullUpLabel').innerHTML = '';
+							this.maxScrollY = pullUpOffset;
+						}
+					},
+					onScrollEnd : function() {
+						if (pullDownEl.className.match('flip')) {
+							pullDownEl.className = 'loading';
+							pullDownEl.querySelector('.pullDownLabel').innerHTML = '正在加载';
+							pullDownAction(); // Execute custom function (ajax call?)
+						} else if (pullUpEl.className.match('flip')) {
+							pullUpEl.className = 'loading';
+							pullUpEl.querySelector('.pullUpLabel').innerHTML = '正在加载';
+							pullUpAction(); // Execute custom function (ajax call?)
+						}
+					}
+				});
+
+		setTimeout(function() {
+			document.getElementById('wrapper').style.left = '0';
+		}, 800);
+	}
+	document.addEventListener('touchmove', function(e) {
+		e.preventDefault();
+	}, false);
+
+	document.addEventListener('DOMContentLoaded', function() {
+		setTimeout(loaded, 200);
+	}, false);
+	
+	/*]]>*/
+</script>
+</head>
+<body>
+	<!-- 下拉刷新 -->
+	<div id="wrapper">
+		<div id="scroller">
+			<div id="pullDown">
+				<span class="pullDownIcon"></span><span class="pullDownLabel"></span>
+			</div>
+			<ul id="thelist">
+				<li th:each="list:${lists}">
+					<a th:href="${list.addr}" th:utext="${list.title}" target="_blank"></a>
+				</li>
+			</ul>
+			<div id="pullUp">
+				<span class="pullUpIcon"></span><span class="pullUpLabel"></span>
+			</div>
+		</div>
+	</div>
+	
+	<script th:inline="javascript">
+		$('#pullDown').hide();
+		$('#pullUp').hide();
+	</script>
+</body>
+</html>

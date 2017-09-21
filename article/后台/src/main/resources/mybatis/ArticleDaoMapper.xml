@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.tianrun.artM.dao.ArticleDao">
+
+	<insert id="addL2" parameterType="com.tianrun.artM.pojo.L2Class">
+		insert into l2class(name,uuid)
+		values (#{name},#{uuid});
+	</insert>
+	<select id="getl2" parameterType="String" resultType="com.tianrun.artM.pojo.L2Class">
+		select id,name
+		from l2class;
+	</select>
+	
+	<select id="getL2IdByUuid" parameterType="String" resultType="int">
+		select id
+		from l2class
+		where uuid=#{uuid};
+	</select>
+	
+	<update id="updL2" parameterType="int">
+		update l2class
+		set uuid=''
+		where id=#{id};
+	</update>
+
+	
+	<insert id="addType" parameterType="String">
+		insert into artClasses(name,cnt)
+		values (#{name},0);
+	</insert>
+	
+	<insert id="addType2" parameterType="com.tianrun.artM.pojo.ArtClass">
+		insert into artClasses(name,cnt,pid,uuid)
+		values (#{name},0,#{pid},#{uuid});
+	</insert>
+	
+	<select id="getL3IdByUuid" parameterType="String" resultType="int">
+		select id
+		from artClasses
+		where uuid=#{uuid};
+	</select>
+	
+	<update id="updL3" parameterType="String">
+		update artClasses
+		set uuid=''
+		where uuid=#{uuid};
+	</update>
+	
+	<!-- 文章分类 -->
+	<select id="getClassList" resultType="com.tianrun.artM.pojo.ArtClass">
+		select id,name,cnt
+		from artClasses;
+	</select>
+	
+	<!-- 文章分类 -->
+	<select id="getClassListByPid" parameterType="String" resultType="com.tianrun.artM.pojo.ArtClass">
+		select id,name,cnt
+		from artClasses
+		where pid = #{pid}
+	</select>
+	
+	<!-- 根据文章分类获取标题列表 -->
+	<select id="getTitleByType" parameterType="String" resultType="com.tianrun.artM.pojo.Article">
+		select id,title,addr,classId
+		from artTitles
+		where classId=#{classId}
+		order by createTime desc
+	</select>
+	
+	<delete id="delArticle" parameterType="String" >
+		delete from artTitles where id=#{id};
+	</delete>
+	<update id="minusCount" >
+		update artClasses set cnt = cnt-1 where id=#{id};
+	</update>
+	
+	<insert id="addArticle" parameterType="com.tianrun.artM.pojo.Article">
+		insert into artTitles(title,classId,uuid)
+		values (#{title},#{classId},#{uuid})
+	</insert>
+	<select id="getIdByUuid" parameterType="String" resultType="int">
+		select id from artTitles
+		where uuid=#{uuid};
+	</select>
+	<update id="updAddr" parameterType="com.tianrun.artM.pojo.Article">
+		update artTitles
+		set addr=#{addr},uuid=''
+		where id=#{id};
+	</update>
+	<update id="updArticle" parameterType="com.tianrun.artM.pojo.Article">
+		update artTitles
+		set title=#{title},createTime=now()
+		where id=#{id};
+	</update>
+	
+	
+	
+	<update id="addCount" >
+		update artClasses set cnt = cnt+1 where id=#{id};
+	</update>
+	
+	<select id="getArticle" parameterType="String" resultType="com.tianrun.artM.pojo.Article">
+		select title,addr
+		from artTitles
+		where id=#{id};
+	</select>
+	
+	
+	
+	
+</mapper>

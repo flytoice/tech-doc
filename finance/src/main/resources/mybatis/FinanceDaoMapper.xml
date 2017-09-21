@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.tianrun.finance.pro1.dao.FinanceDao">
+
+	<select id="getTaxInfos" parameterType="String" resultType="com.tianrun.finance.pro1.pojo.TaxInfo">
+		select id,companyName
+		from taxInfos
+		where companyName like CONCAT('%',#{name},'%');
+	</select> 
+	
+	<select id="getTaxInfo" parameterType="int" resultType="com.tianrun.finance.pro1.pojo.TaxInfo">
+		select companyName,taxNumber,address,phone,bank,cardNo
+		from taxInfos
+		where id = #{id};
+	</select>
+	
+	<select id="getTaxInfoByName" parameterType="String" resultType="com.tianrun.finance.pro1.pojo.SearchHis">
+		select id as companyId,companyName
+		from taxInfos
+		where companyName = #{name};
+	</select>
+	
+	<select id="selectHis" parameterType="int" resultType="com.tianrun.finance.pro1.pojo.SearchHis">
+		select companyId,companyName
+		from searchHis
+		where staffId=#{staffId}
+		order by cnt desc
+		limit 10;
+	</select>
+	
+	<insert id="insertHis" parameterType="com.tianrun.finance.pro1.pojo.SearchHis">
+		insert into searchHis(staffId,companyId,companyName,cnt)
+		values (#{staffId},#{companyId},#{companyName},1)
+	</insert>
+	
+	<update id="updateHis" parameterType="com.tianrun.finance.pro1.pojo.SearchHis">
+		update searchHis
+		set cnt = cnt+1
+		where staffId=#{staffId} and companyId= #{companyId};
+	</update>
+</mapper>

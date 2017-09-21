@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>天润发票详情页</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+    <script src="js/jquery.min.js"></script>
+	<script src="js/jquery-qrcode-0.14.0.min.js"></script>
+	<script type="text/javascript">
+		var thisURL = document.URL;    
+		var getval =thisURL.split('?')[1];  
+		var showval= getval.split("=")[1];
+		var taxData={};
+		function getTaxInfo(){
+			$.ajax({
+				type : "GET",
+				url : "taxInfo",
+				data : {
+					"id" : showval
+				},
+				success : function(data) {
+					taxData=data
+					$("#companyName").html(taxData["companyName"]);
+				  	$("#taxNumber").html(taxData["taxNumber"]);
+				  	$("#address").html(taxData["address"]);
+				  	$("#phone").html(taxData["phone"]);
+				  	$("#bank").html(taxData["bank"]);
+				  	$("#cardNo").html(taxData["cardNo"]);
+				  	$('#qrCode').qrcode({render: "image",ecLevel:'H',width: 200,height: 200,text: JSON.stringify(taxData)});
+				},
+				dataType : "json"
+			});
+		}
+	</script>
+  </head>
+  <body>
+      <div class="container">
+          <div class="row T_ico1">
+                 <div class="T_bottom15 clearfix">
+                    <label for="inputEmail3" class="control-label T_ico2">名称:</label>
+                 <div id="companyName" class="T_textiss"></div>
+                 </div>
+                 <div class="T_bottom15 clearfix">
+                    <label for="inputEmail3" class="control-label T_ico2">纳税人识别号：</label>
+                    <div id="taxNumber" class="T_textiss"></div>
+                 </div>
+                 <div class="T_bottom15 clearfix">
+                    <label for="inputEmail3" class="control-label T_ico2">地址：</label>
+                    <div id="address" class="T_textiss"></div>
+                 </div>
+                 <div class="T_bottom15 clearfix">
+                    <label for="inputEmail3" class="control-label T_ico2">电话：</label>
+                    <div id="phone" class="T_textiss"></div>
+                 </div>
+                 <div class="T_bottom15 clearfix">
+                    <label for="inputEmail3" class="control-label T_ico2">开户行：</label>
+                    <div id="bank" class="T_textiss"></div>
+                 </div>
+                 <div class="T_bottom15 clearfix">
+                    <label for="inputEmail3" class="control-label T_ico2">账号：</label>
+                    <div id =cardNo class="T_textiss"></div>
+                 </div>
+                 <div id="qrCode"></div>
+        </div>  
+      </div>
+      <nav class="navbar navbar-default navbar-fixed-bottom">
+          <div class="container R_opcur">
+              <ul class="nav navbar-nav">
+                  <li class="col-xs-12 col-sm-12"><a href="member.html" style="width: 100%; text-align: center; display: inline-block;"><i class="T_opern"></i><span>个人中心</span></a></li>
+              </ul>
+
+          </div>
+     </nav>
+  </body>
+  
+  <script type="text/javascript">
+  	getTaxInfo();
+  </script>
+</html>

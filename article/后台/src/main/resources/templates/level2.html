@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>微信菜单项</title>
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<link href="css/wxstyle.css" rel="stylesheet" />
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+</head>
+<body>
+	<div class="T_wrapper">
+		<nav class="navbar-default navbar-static-side">
+			<div class="T_sidebar">
+				<ul class="nav metismenu" id="level2">
+					<li class="nav-header"><img src="img/T_logo1.png" /></li>
+					
+					<li th:if="${session.user.name eq 'admin'}">
+						<button
+							class="btn btn-sm btn-primary btn-position btn-block"
+							type="submit" data-target=".bs-example-modal-sm"
+							data-toggle="modal">新增微信二级菜单</button>
+					</li>
+
+					<li th:each="type:${level2}"><a
+						th:href="${'javascript:getTypeByL2('+type.id+',&quot;'+type.name+'&quot;,1);'}"
+						th:utext="${type.name}"></a></li>
+				</ul>
+			</div>
+		</nav>
+		<div id="page-wrapper" class="gray-bg">
+			<div class="row">
+				<div class="navbar navbar-static-top">
+					<div class="navbar-header">
+						<div class="top-title">天润知识库文章管理系统</div>
+					</div>
+					<ul class="nav navbar-top-links navbar-right">
+						<li th:inline="text"><a href="#"><i class="fa fa-user"></i>[[${session.user.name}]]</a></li>
+						<li><a href="javascript:logout()"><i class="fa fa-arrow-circle-right">退出登录</i></a></li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- right content -->
+			<div class="wrapper-content ">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="T_contenter">
+							<form class="form-inline">
+								<div class="form-group">
+									<b><span class="T_marJuright" id="typeName"></span></b>
+									<!-- <label>列表地址:</label> 
+									<input type="text" style="width: 350px;" class="form-control" placeholder="请输入链接地址" /> -->
+								</div>
+								<!-- <button type="submit" class="btn btn-default T_marJuright2">复制</button> -->
+								<!-- <a id="addBtn" href="editPage" target="_blank"
+									class="btn btn-primary">新增文章</a> -->
+								
+								<a th:if="${session.user.name eq 'admin'}"
+									class="btn btn-sm btn-primary btn-position"
+									type="submit" data-target=".bs-example-modal-sm2"
+									data-toggle="modal">新增类别</a>
+							</form>
+
+
+							<div class="table-responsive T_padding1">
+								<table id="articles" class="table T_tableul">
+									<tbody id="tb">
+									</tbody>
+								</table>
+							</div>
+							<div id="test" class="text-right"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 新增微信二级菜单弹出框 -->
+	<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+		aria-labelledby="mySmallModalLabel" id="l2AddDia">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">增加类别</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-inline">
+						<div class="form-group">
+							<label>类别名称：</label> <input type="text" class="form-control"
+								id="T_btnappend" value="" />
+						</div>
+						<div class="T_martop text-center T_padding1">
+							<button class="btn btn-primary T_buttonm" type="button" id="addWxL2Btn">确 定</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 新增类别弹出框 -->
+	<div class="modal fade bs-example-modal-sm2" tabindex="-1" role="dialog"
+		aria-labelledby="mySmallModalLabel" id="l3AddDia">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">增加类别</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-inline">
+						<div class="form-group">
+							<label>类别名称：</label> <input type="text" class="form-control"
+								id="T_btnappend2" value="" />
+						</div>
+						<div class="T_martop text-center T_padding1">
+							<button class="btn btn-primary T_buttonm" type="button"
+								id="addTypeBtn">确 定</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 删除弹出框 -->
+	<div class="modal fade bs-example-modal-sm1" tabindex="-1"
+		role="dialog">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">提示信息</h4>
+				</div>
+				<div class="modal-body">
+					<p>
+						您是否要删除“<span id="titleName"></span>”这篇文章？
+					</p>
+					<div class="form-group text-center">
+						<button class="btn btn-default T_marJuright1" aria-label="Close"
+							data-dismiss="modal">取 消</button>
+						<button class="btn btn-primary" id="delArticleBtn"
+							onclick="delArticleOK()">确 定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jPage-1.2.js"></script>
+	<script th:inline="javascript">
+		var d1 = '<tr class="article">';
+		var d2 = '<td class="T_tdlist"><a href="mainPage?id=';
+		var d21='" target="_blank">';
+		var d22 = '</a></td>';
+		var d3 = '<td>';
+		var d31 = '<span style="display:none">'
+	
+		var d32 = "</span>"
+		//var d4 = '<button type="submit" class="btn btn-sm btn-primary m-r-sm T_marJuright5" onclick="viewArticle(this)">查看</button>';
+		var d4 = '';
+		//var d5 = '<button type="submit" class="btn btn-sm btn-danger m-r-sm" data-target=".bs-example-modal-sm1" data-toggle="modal" onclick="delArticle(this)">删除</button>';
+		var d5='';
+		var d6 = '</td>';
+		var d7 = '</tr>';
+	
+		var ctx = '';
+		var curPage_g = 0;
+		//var fix_g = {"total":0,"pageNum":0,"pageSize":0};
+		var pageJson_g={};
+		
+	
+		//微信二级菜单
+		$(function() {
+			$("#addWxL2Btn").click(
+					function() {
+						var nm = $("#T_btnappend").val();
+						$.ajax({
+							type : "POST",
+							url : "addInfos",
+							dataType : "json",
+							async : false,
+							data : {
+								"name" : nm
+							},
+							success : function(data) {
+								$("#l2AddDia").modal("hide");
+								if (1 == data["code"]) {
+									/*<![CDATA[*/
+									$("#level2 li:last").after("<li><a href=javascript:getTypeByL2("+data["busiData"]["id"]+",&quot;"+nm+"&quot;,1);>"+nm+"</a></li>")
+									/*]]>*/
+								} else {
+									alert("数据访问出错")
+								}
+							}
+						});
+					});
+		});
+		//微信二级菜单下的类别新增
+		$(function() {
+			$("#addTypeBtn").click(
+					function() {
+						var nm = $("#T_btnappend2").val();
+						if ('' == typId_g) {
+							alert('请先选择上级分类');
+							return;
+						}
+						$.ajax({
+							type : "POST",
+							url : "type",
+							data : {
+								"pid" : typId_g,
+								"name" : nm
+							},
+							success : function(data) {
+								$("#l3AddDia").modal("hide");
+								if (1 == data["code"]) {
+									if ($("#tb tr:last").length==0){
+										$("#tb").append(
+												d1 + d2 + typId_g +d21
+												+ nm + d22 + d3 + d31
+												+ data["busiData"]["id"]
+												+ d32 + d4 + d5 + d6 + d7		
+										)
+										
+									} else {
+										/*<![CDATA[*/
+										$("#tb tr:last").after(
+												d1 + d2 + typId_g +d21
+												+ nm + d22 + d3 + d31
+												+ data["busiData"]["id"]
+												+ d32 + d4 + d5 + d6 + d7		
+										)
+										/*]]>*/
+									}
+								} else {
+									alert("数据访问出错")
+								}
+							},
+							dataType : "json",
+							async : true
+						});
+					});
+		});
+		
+		
+		
+		//分类点击，显示列表
+		function getTypeByL2(typeId, typeName, pageNumber) {
+			typId_g = typeId;
+			curPage_g = pageNumber;
+			typNm_g = typeName;
+			getTitleData(typeId, typeName, pageNumber);
+		};
+		
+		function getTitleData(typeId, typeName, pageNumber) {
+			typId_g = typeId;
+			curPage_g = pageNumber;
+			typNm_g = typeName;
+			$.ajax({
+				type : "GET",
+				url : "typesOfL2",
+				data : {
+					"id":typeId
+				},
+				success : function(data) {
+					var json = eval(data);
+					var tb = $("#tb");
+					tb.empty();
+					ctx = '';
+					//var titles = json["list"];
+					$.each(json, function(index, content) {
+						ctx += d1 + d2 + typeId +d21
+								+ content["name"] + d22 + d3 + d31
+								+ content["id"]
+								+ d32 + d4 + d5 + d6 + d7;
+					});
+					tb.html(ctx);
+					$("#typeName").text(typeName)
+					$("#addBtn").attr("href",'editPage?id=' + typeId + /*<![CDATA[*/'&'/*]]>*/ + 'name=' + typeName);
+					pageJson_g = json;
+				},
+				complete : function(XMLHttpRequest, textStatus) {
+			        var sessionstatus = XMLHttpRequest.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus，
+			        if (sessionstatus == "timeout") {
+			            // 如果超时就处理 ，指定要跳转的页面
+			            window.open("login.html","_self")
+			        }
+			    },
+
+				dataType : "json",
+				async : false
+			});
+		};
+
+		var tr_g;
+		var artId_g;
+		var typId_g='';
+		var typNm_g;
+		var spilt = /*<![CDATA[*/'&'/*]]>*/;
+
+		//查看文章
+		function viewArticle(viewBtnObj) {
+			var tr = $(viewBtnObj).parents(".article");
+			var ids = tr.find("span");
+			var strs = ids.text().split(",");
+
+			tr_g = tr;
+			artId_g = strs[0];
+
+			window.open("editPage?id=" + typId_g + spilt + "name=" + typNm_g
+					+ spilt + "artId=" + artId_g, "_blank");
+		}
+
+		//删除按钮
+		function delArticle(delBtnObj) {
+			var tr = $(delBtnObj).parents(".article");
+			var ids = tr.find("span");
+			var strs = ids.text().split(",");
+			$("#titleName").text(tr.find("a").text());
+
+			tr_g = tr;
+			artId_g = strs[0];
+		}
+		//删除确定按钮
+		function delArticleOK() {
+			/*<![CDATA[*/
+			var url = "title?articleId=" + artId_g + "&typeId=" + typId_g;
+			/*]]>*/
+			$.ajax({
+				url : url,
+				type : 'POST',
+				data : {
+					_method : 'DELETE'
+				},
+				success : function(data) {
+					if (1 == data["code"]) {
+						//关闭窗口，删除行
+						$('.bs-example-modal-sm1').modal('hide')
+						tr_g.remove();
+					} else {
+						alert("数据访问出错");
+					}
+				},
+				complete : function(XMLHttpRequest, textStatus) {
+			        var sessionstatus = XMLHttpRequest.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus，
+			        if (sessionstatus == "timeout") {
+			            // 如果超时就处理 ，指定要跳转的页面
+			           	window.open("login.html","_self")
+			        }
+			    },
+
+				dataType : "json",
+				async : false
+			});
+		}
+		
+		function logout(){
+			$.ajax({
+				type : "GET",
+				url : "userLogout",
+				data : {
+				},
+				success : function(data) {
+					window.open("login.html","_self")
+				},
+				complete : function(XMLHttpRequest, textStatus) {
+			        var sessionstatus = XMLHttpRequest.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus，
+			        if (sessionstatus == "timeout") {
+			            // 如果超时就处理 ，指定要跳转的页面
+			            window.open("login.html","_self")
+			        }
+			    },
+				dataType : "json",
+				async : false
+			});
+		}
+		
+	</script>
+</body>
+</html>

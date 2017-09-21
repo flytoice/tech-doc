@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>用户信息</title>
+
+    <!-- Bootstrap -->
+
+<link href="css/index.css" rel="stylesheet">
+<link href="css/bootstrap.min.css" rel="stylesheet">  
+<link href="css/validate.css" rel="stylesheet">
+<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">  
+
+<script src="js/jquery.min.js"></script> 
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery-mvalidate.js"></script>
+<script src="js/moment-with-locales.min.js"></script>  
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+<script src="js/jquery.cxselect.min.js"></script>
+</head>
+  <body>
+      <div class="container">
+          <form id="T_former" class="form-horizontal T_martop">
+             <div class="form-group">
+                  <div class="col-xs-12 col-sm-12">
+                      <input type="text" class="form-control" placeholder="编号(OA)" data-required="true" data-descriptions="usernumber" data-describedby="usernumber-description">
+                  </div>                  
+              </div> 
+              <div class="form-group">
+                  <div class="col-xs-12 col-sm-12">
+                      <input type="text" class="form-control" placeholder="姓名" data-required="true" data-descriptions="username" data-describedby="username-description">
+                  </div>                  
+              </div> 
+              <div class="form-group">
+                  <div class="col-xs-12 col-sm-12">
+                      <select class="form-control" data-required="true" data-descriptions="sex" data-describedby="sex-description" placeholder="请选择">
+                                <option value="" selected disabled>请选择</option>
+                                <option value="1">男</option>
+                                <option value="2">女</option>
+                       </select>
+                  </div>                  
+              </div>
+
+              <div class="form-group">  
+                  <div class="col-xs-12 col-sm-12">
+                        <div class="input-group date" id="dpCreatedAtStart">
+                              <input type="text" class="form-control" placeholder="出生日期" data-required="true" data-descriptions="BirthDate" data-describedby="BirthDate-description">
+                              <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                        </div>  
+                   </div>
+              </div>
+              <div class="form-group">
+                  <div class="col-xs-12 col-sm-12">
+                      <input type="text" class="form-control" placeholder="联系电话" data-required="true"   data-descriptions="phone" data-describedby="phone-description">
+                  </div>                  
+              </div>
+              <div class="form-group">
+                  <div class="col-xs-12 col-sm-12">
+                      <input type="text" class="form-control" placeholder="公司邮箱" data-required="true"  data-descriptions="mail" data-describedby="mail-description">
+                  </div>                  
+              </div>
+              <div id="org">
+	              <div class="form-group">
+	                  <div class="col-xs-12 col-sm-12">
+	                  		<select class="first form-control"></select>
+	                      <!-- <input type="text" class="form-control" placeholder="公司" data-required="true"  data-descriptions="company" data-describedby="company-description"> -->
+	                  </div>                  
+	              </div>
+	              <div class="form-group">
+	                  <div class="col-xs-12 col-sm-12">
+	                  		<select class="second form-control"></select>
+	                      <!-- <input type="text" class="form-control" placeholder="中心" data-required="true"  data-descriptions="core" data-describedby="core-description"> -->
+	                  </div>                  
+	              </div>
+	              <div class="form-group">
+	                  <div class="col-xs-12 col-sm-12">
+	                  		<select class="third form-control"></select>
+	                      <!-- <input type="text" class="form-control" placeholder="部门" data-required="true"   data-descriptions="department" data-describedby="department-description"> -->
+	                  </div>                  
+	              </div>
+	              <div class="form-group">
+	                  <div class="col-xs-12 col-sm-12">
+	                  		<select class="forth form-control"></select>
+	                      <!-- <input type="text" class="form-control" placeholder="科室" data-required="true"  data-descriptions="department1" data-describedby="department1-description"> -->
+	                  </div>                  
+	              </div>
+              </div> 
+
+              <div class="form-group">
+                    <div class="col-xs-12 col-sm-12">
+                      <button type="submit" class="btn btn-primary btn-lg btn-block T_loginbtn">确 定</button>
+                  </div>
+              </div>        
+          </form>          
+      </div>
+
+<script type="text/javascript">
+$(function () {  
+      $(".input-group.date").datetimepicker({
+        format: "YYYY-MM-DD",
+        locale: "zh-cn"
+    });
+}); 
+    
+</script>
+<script type="text/javascript">
+$(function(){
+$("#T_former").mvalidate({
+            type:1,
+            onKeyup:true,
+            sendForm:true,
+            firstInvalidFocus:false,
+            valid:function(event,options){
+                //点击提交按钮时,表单通过验证触发函数
+                //alert("验证通过！接下来可以做你想做的事情啦！");
+                 event.preventDefault();
+            },  
+            eachValidField:function(val){},
+            eachInvalidField:function(event, status, options){},
+        
+             descriptions:{
+                usernumber:{
+                    required : '请输入编号(OA)'
+                },
+                username:{
+                    required : '请输入姓名'
+                }, 
+                sex:{
+                    required : '请输入性别'
+                }, 
+                BirthDate:{
+                    required : '请输入出生日期'
+                }, 
+                phone:{
+                    required : '请输入联系电话'
+                },
+                mail:{
+                    required : '请输入公司邮箱'
+                },
+                company:{
+                    required : '请输入公司'
+                },
+                core:{
+                    required : '请输入中心'
+                },
+                department:{
+                    required : '请输入部门'
+                },
+                department1:{
+                    required : '请输入科室'
+                },
+                code:{
+                    required : '请输入岗位编码'
+                }, 
+                postname:{
+                    required : '请输入岗位名称'
+                }    
+            }
+        });
+     })
+</script>         
+	
+<script>
+$('#org').cxSelect({
+	  selects: ['first', 'second', 'third', 'forth'],
+	  jsonName: 'name',
+	  jsonValue: 'value',
+	  jsonSub: 'sub',
+	  data: [{"name":"北京天润新能投资有限公司","sub":[{"name":"总经办","sub":[],"value":"2"},{"name":"人力行政中心","sub":[{"name":"行政管理部","sub":[{"name":"后勤保障组","sub":[],"value":"32"},{"name":"公共关系组","sub":[],"value":"33"},{"name":"法务管理组","sub":[],"value":"34"},{"name":"档案管理组","sub":[],"value":"35"},{"name":"行政管理组","sub":[],"value":"39"}],"value":"8"},{"name":"共享服务部","sub":[],"value":"9"},{"name":"其他组","sub":[],"value":"10"},{"name":"人力资源管理部","sub":[{"name":"招聘组","sub":[],"value":"36"},{"name":"薪酬福利组","sub":[],"value":"37"},{"name":"干部管理组","sub":[],"value":"38"}],"value":"11"},{"name":"业务支持部","sub":[],"value":"12"}],"value":"3"},{"name":"技术中心","sub":[{"name":"技术应用一部","sub":[],"value":"13"},{"name":"技术应用二部","sub":[],"value":"14"},{"name":"技术应用三部","sub":[],"value":"15"},{"name":"成本管理部","sub":[{"name":"二组","sub":[],"value":"40"},{"name":"三组","sub":[],"value":"41"},{"name":"保险组","sub":[],"value":"42"},{"name":"一组","sub":[],"value":"43"}],"value":"16"},{"name":"技术研究应用部","sub":[],"value":"17"},{"name":"技术管理部","sub":[],"value":"18"},{"name":"待安置","sub":[],"value":"19"}],"value":"4"},{"name":"财务中心","sub":[{"name":"财务管理部","sub":[{"name":"资金管理组","sub":[],"value":"44"},{"name":"财务分析组","sub":[],"value":"45"}],"value":"20"},{"name":"业务财务部","sub":[{"name":"合资合作","sub":[],"value":"46"},{"name":"华东业务财务组","sub":[],"value":"47"},{"name":"西北业务财务组","sub":[],"value":"48"},{"name":"华北业务财务组","sub":[],"value":"49"},{"name":"本部业务财务组","sub":[],"value":"50"},{"name":"南方业务财务组","sub":[],"value":"53"}],"value":"21"},{"name":"共享财务部","sub":[{"name":"税务组","sub":[],"value":"51"},{"name":"华东财务组","sub":[],"value":"52"},{"name":"合并组","sub":[],"value":"54"},{"name":"本部财务组","sub":[],"value":"55"},{"name":"西北财务组","sub":[],"value":"56"},{"name":"华北财务组","sub":[],"value":"57"},{"name":"资产组","sub":[],"value":"58"}],"value":"22"}],"value":"5"},{"name":"工程中心","sub":[{"name":"工程管理部","sub":[{"name":"项目推进组","sub":[],"value":"59"},{"name":"商务合同组","sub":[],"value":"60"},{"name":"并网协调组","sub":[],"value":"61"},{"name":"进度信息组","sub":[],"value":"62"},{"name":"综合组","sub":[],"value":"63"}],"value":"23"},{"name":"安全质量部","sub":[{"name":"安全组","sub":[],"value":"64"},{"name":"质量组","sub":[],"value":"65"}],"value":"24"},{"name":"工程一区（内蒙、山西、河北、东三省）","sub":[{"name":"石堂山二期","sub":[],"value":"66"},{"name":"义县二期","sub":[],"value":"67"},{"name":"夏县三期(100MW)","sub":[],"value":"68"},{"name":"夏县四期(50MW)","sub":[],"value":"69"},{"name":"固阳兴顺西(11.5MW)","sub":[],"value":"70"},{"name":"张北县两面井","sub":[],"value":"71"},{"name":"石堂山三期","sub":[],"value":"72"},{"name":"卧龙洞二期(25.5MW)","sub":[],"value":"73"},{"name":"赤峰和平营子","sub":[],"value":"74"},{"name":"长岭风电项目","sub":[],"value":"75"}],"value":"25"},{"name":"工程二区（四川、云南、贵州、湖南、湖北、重庆、广西）","sub":[{"name":"湖北桃花山二期、衡南天光峰、双峰甘棠、天","sub":[],"value":"76"},{"name":"攀枝花三、四期项目","sub":[],"value":"77"},{"name":"巧家洗羊塘49.5MW、禄劝项目","sub":[],"value":"78"}],"value":"26"},{"name":"工程三区（江苏、浙江、江西、广东）","sub":[{"name":"江苏大丰润龙","sub":[],"value":"79"},{"name":"湖州狮子山风电场工程","sub":[],"value":"80"},{"name":"江西崇义龙归、天星风电场项目","sub":[],"value":"81"},{"name":"全南天排山","sub":[],"value":"82"}],"value":"27"},{"name":"工程四区（山东、安徽）","sub":[{"name":"枞阳三公山32MW","sub":[],"value":"83"},{"name":"六安金寨朝阳山一期50MW风电场","sub":[],"value":"84"},{"name":"德州夏津二期风电场项目","sub":[],"value":"85"},{"name":"天润淄川摘星山49.5MW风电场工程","sub":[],"value":"86"},{"name":"沂源铜陵关50MW风电场","sub":[],"value":"87"},{"name":"章丘九鼎山50MW风电场","sub":[],"value":"88"}],"value":"28"},{"name":"工程五区（河南、西北五省、西藏）","sub":[{"name":"东乡小璜项目","sub":[],"value":"89"},{"name":"西北区域各项目（合规性、竣工验收、消缺收尾）","sub":[],"value":"90"},{"name":"南乐","sub":[],"value":"91"},{"name":"唐河三期","sub":[],"value":"92"},{"name":"滑县金堤一二期","sub":[],"value":"93"}],"value":"29"}],"value":"6"},{"name":"生产中心","sub":[{"name":"生产运营部","sub":[{"name":"风机组","sub":[],"value":"94"},{"name":"计划经营组","sub":[],"value":"97"},{"name":"电气组","sub":[],"value":"98"}],"value":"30"},{"name":"业务创新部","sub":[{"name":"电力市场创新组","sub":[],"value":"95"},{"name":"数字与信息化业务组","sub":[],"value":"96"}],"value":"31"}],"value":"7"},{"name":"数码产品办公室","sub":[{"name":"项目组","sub":[],"value":"114"},{"name":"研发组","sub":[],"value":"115"}],"value":"99"},{"name":"战略发展部","sub":[{"name":"战略规划组","sub":[],"value":"116"},{"name":"开发管控组","sub":[],"value":"117"}],"value":"100"},{"name":"融资部","sub":[{"name":"西北组","sub":[],"value":"118"},{"name":"一组","sub":[],"value":"119"},{"name":"二组","sub":[],"value":"120"},{"name":"三组","sub":[],"value":"121"},{"name":"创新组","sub":[],"value":"122"}],"value":"101"},{"name":"投资发展部","sub":[{"name":"投资1组","sub":[],"value":"123"},{"name":"投资2组","sub":[],"value":"124"}],"value":"102"},{"name":"碳资产管理办公室（筹）","sub":[],"value":"103"},{"name":"股权管理部","sub":[{"name":"股权组","sub":[],"value":"125"}],"value":"104"},{"name":"运营管理部","sub":[{"name":"内控组","sub":[],"value":"126"},{"name":"战略计划组","sub":[],"value":"127"}],"value":"105"},{"name":"环境与社会责任管理部","sub":[{"name":"安全质量监管组","sub":[],"value":"128"},{"name":"环境与社会责任管理组","sub":[],"value":"129"}],"value":"106"},{"name":"信息管理部","sub":[{"name":"信息应用组","sub":[],"value":"130"}],"value":"107"},{"name":"风（光）资源技术部","sub":[{"name":"业务保障组","sub":[],"value":"131"},{"name":"光资源技术组","sub":[],"value":"132"},{"name":"机制保障组","sub":[],"value":"133"},{"name":"风控管理组","sub":[],"value":"134"}],"value":"108"},{"name":"供应链管理部","sub":[{"name":"交付管理组","sub":[],"value":"135"},{"name":"采购合同管理组","sub":[],"value":"136"},{"name":"招采管理组","sub":[],"value":"137"},{"name":"供应链管理组","sub":[],"value":"138"}],"value":"109"},{"name":"西北分公司","sub":[{"name":"分公司总经办","sub":[],"value":"139"},{"name":"生产业务部","sub":[],"value":"140"},{"name":"开发部（西北）","sub":[],"value":"141"},{"name":"综合办公室","sub":[],"value":"142"}],"value":"110"},{"name":"华北分公司","sub":[{"name":"分公司总经办","sub":[],"value":"143"},{"name":"开发部（华北）","sub":[],"value":"144"},{"name":"生产业务部（华北）","sub":[],"value":"145"},{"name":"综合办公室（华北）","sub":[],"value":"146"},{"name":"子公司","sub":[],"value":"147"}],"value":"111"},{"name":"华东分公司","sub":[{"name":"分公司总经办","sub":[],"value":"148"},{"name":"生产业务部（华东）","sub":[],"value":"149"},{"name":"开发部（华东）","sub":[],"value":"150"},{"name":"综合办公室（华东）","sub":[],"value":"151"},{"name":"长岭制氢公司","sub":[],"value":"152"}],"value":"112"},{"name":"南方分公司","sub":[{"name":"分公司总经办","sub":[],"value":"153"},{"name":"开发部（南方）","sub":[],"value":"154"},{"name":"生产业务部（南方）","sub":[],"value":"155"},{"name":"综合办公室（南方）","sub":[],"value":"156"}],"value":"113"}],"value":"1"}]
+	});
+
+
+</script>
+
+</body>
+</html>

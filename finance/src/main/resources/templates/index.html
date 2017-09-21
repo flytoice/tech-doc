@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>天润公司列表</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<link href="css/index.css" rel="stylesheet" />
+<script src="js/jquery.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="row text-center">
+			<img class="img-responsive" src="img/tr_img.jpg"/>
+		</div>
+		<form class="row T_ico1">
+			<div class="T_ico form-group">
+				<input id="keyWord" type="text" class="T_seacher form-control fl" placeholder="请输入关键词" />
+				<button id="btnSearch" type="button"
+					class="T_border btn-default1 fr">搜 索</button>
+			</div>
+		</form>
+		<div class="row">
+			<ul id="companyList" class="list-unstyled T_listnow T_ico1">
+			</ul>
+		</div>
+	</div>
+	<nav class="navbar navbar-default navbar-fixed-bottom">
+          <div class="container R_opcur">
+              <ul class="nav navbar-nav">
+                  <li class="col-xs-4 col-sm-4"><a href="hot" class="text-center"><i class="fa fa-th-large T_fonts fa-lg"></i><span>常用</span></a></li>
+                  <li class="col-xs-4 col-sm-4"><a href="taxInfos" class="text-center"><i class="fa fa-search T_fonts fa-lg"></i><span>搜索</span></a></li>
+                  <li class="col-xs-4 col-sm-4"><a href="member.html" class="text-center"><i class="fa fa-user T_fonts fa-lg"></i><span>我的</span></a></li>
+              </ul>
+
+          </div>
+      </nav>
+</body>
+<script th:inline="javascript">
+/*<![CDATA[*/
+	$(document).ready(function() {
+		$('#btnSearch').click(function() {
+			$.ajax({
+				type : "GET",
+				url : "companyByName",
+				data : {
+					"name" : $("#keyWord").val()
+				},
+				success : function(data) {
+					var context = "";
+					//i表示在data中的索引位置，n表示包含的信息的对象 
+					$.each(data, function(i, n) {
+						context += '<li><a href="taxInfo?id='+n["id"]+'&name='+n["companyName"]+'" target="_self">'+n["companyName"]+'</a></li>'
+					});
+					
+					$("#companyList").empty()
+					$("#companyList").append(context)
+				},
+				dataType : "json"
+			});
+		});
+	});
+	/*]]>*/
+</script>
+</html>

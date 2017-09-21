@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.tianrun.article.dao.ArticleDao">
+	<!-- 文章分类 -->
+	<select id="getClassList" parameterType="String" resultType="com.tianrun.article.pojo.ArtClass">
+		select id,name,cnt
+		from artClasses
+		where pid=#{pid}
+	</select>
+	
+	<!-- 根据文章分类获取标题列表 -->
+	<select id="getTitleByType" parameterType="String" resultType="com.tianrun.article.pojo.Article">
+		select id,title,addr,classId
+		from artTitles
+		where classId=#{classId}
+		order by createTime desc
+	</select>
+</mapper>

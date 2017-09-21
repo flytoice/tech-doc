@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>文章编辑</title>
+<!-- Bootstrap -->
+<link href="css/wxstyle.css" rel="stylesheet" />
+<link href="css/bootstrap-combined.no-icons.min.css" rel="stylesheet" />
+<link href="css/bootstrap-responsive.min.css" rel="stylesheet" /> 
+<link href="css/font-awesome.css" rel="stylesheet" />
+
+<link href="css/wysiwyg.css" rel="stylesheet" />
+<link href="css/wxstyle.css" rel="stylesheet" />
+</head>
+<body>
+	<div class="T_wrapper">
+		<nav class="navbar-default navbar-static-side">
+			<div class="T_sidebar">
+				<ul class="nav metismenu" id="typeList">
+					<li class="nav-header"><img src="img/T_logo1.png" /></li>
+					<li />
+					<li th:each="type:${typeList}"><a
+						th:href="${'javascript:editInit('+type.id+',&quot;'+type.name+'&quot;);'}"
+						th:utext="${type.name}"></a></li>
+				</ul>
+			</div>
+		</nav>
+		<div id="page-wrapper" class="gray-bg">
+			<div class="row">
+				<div class="navbar navbar-static-top">
+					<div class="navbar-header">
+						<div class="top-title">天润知识库文章管理系统</div>
+					</div>
+					<ul class="nav navbar-top-links navbar-right T_navleft">
+						<li th:inline="text"><a href="#"><i class="icon-user"></i>[[${session.user.name}]]</a></li>
+                  <li><a href="javascript:logout()"><i class="icon-circle-arrow-right"></i>退出登录</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- right content -->
+			<div class="wrapper-content ">
+				<div class="row-fluid">
+					<div class="span12">
+						<div class="T_contenter">
+							<p class="T_borderBot1">
+								<b><span class="T_marJuright" id="typeName" th:text="${typeName eq ''}?${'请选择文章分类'}:${typeName+'类文章'}"></span></b>
+								<a href="javascript:addInit()" target="_blank" class="btn btn-primary">新增文章</a>
+							</p>
+							<form class="form-inline T_bottom15">
+								<div class="form-group">
+									<label for="exampleInputName2">文章标题:</label> 
+									<input type="text" style="width: 550px;" class="form-control" id="exampleInputName2" placeholder="请输入文章标题" th:value="${title}?${title}"></input>
+								</div>
+							</form>
+
+							<!-- 文本编辑器 -->
+							<div class="btn-toolbar" data-role="editor-toolbar"
+								data-target="#editor">
+								<div class="btn-group">
+									<a class="btn dropdown-toggle" data-toggle="dropdown"
+										title="Font"><i class="icon-font"></i><b class="caret"></b></a>
+									<ul class="dropdown-menu">
+									</ul>
+								</div>
+								<div class="btn-group">
+									<a class="btn dropdown-toggle" data-toggle="dropdown"
+										title="Font Size"><i class="icon-text-height"></i> <b
+										class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li><a data-edit="fontSize 9"><font size="9">9</font></a></li>
+										<li><a data-edit="fontSize 8"><font size="8">8</font></a></li>
+										<li><a data-edit="fontSize 7"><font size="7">7</font></a></li>
+										<li><a data-edit="fontSize 6"><font size="6">6</font></a></li>
+										<li><a data-edit="fontSize 5"><font size="5">5</font></a></li>
+									</ul>
+								</div>
+								<div class="btn-group">
+									<a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i
+										class="icon-bold"></i></a> <a class="btn" data-edit="italic"
+										title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a> <a
+										class="btn" data-edit="strikethrough" title="Strikethrough"><i
+										class="icon-strikethrough"></i></a> <a class="btn"
+										data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i
+										class="icon-underline"></i></a>
+								</div>
+								<div class="btn-group">
+									<a class="btn" data-edit="insertunorderedlist"
+										title="Bullet list"><i class="icon-list-ul"></i></a> <a
+										class="btn" data-edit="insertorderedlist" title="Number list"><i
+										class="icon-list-ol"></i></a> <a class="btn" data-edit="outdent"
+										title="Reduce indent (Shift+Tab)"><i
+										class="icon-indent-left"></i></a> <a class="btn"
+										data-edit="indent" title="Indent (Tab)"><i
+										class="icon-indent-right"></i></a>
+								</div>
+								<div class="btn-group">
+									<a class="btn" data-edit="justifyleft"
+										title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+									<a class="btn" data-edit="justifycenter"
+										title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+									<a class="btn" data-edit="justifyright"
+										title="Align Right (Ctrl/Cmd+R)"><i
+										class="icon-align-right"></i></a> <a class="btn"
+										data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i
+										class="icon-align-justify"></i></a>
+								</div>
+
+
+								<div class="btn-group">
+									<a class="btn" title="Insert picture (or just drag &amp; drop)"
+										id="pictureBtn"><i class="icon-picture"></i></a> <input
+										type="file" data-role="magic-overlay"
+										data-target="#pictureBtn" data-edit="insertImage" />
+								</div>
+								<div class="btn-group">
+									<a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i
+										class="icon-undo"></i></a> <a class="btn" data-edit="redo"
+										title="Redo (Ctrl/Cmd+Y)"><i class="icon-repeat"></i></a>
+								</div>
+								<input type="text" data-edit="inserttext" id="voiceBtn"
+									x-webkit-speech="" />
+							</div>
+
+							<div id="editor" th:utext="${content eq ''}?${'输入内容…'}:${content}"></div>
+							<!-- 编辑器end -->
+
+							<div class="T_martop text-center">
+								<!-- <button class="btn btn-default T_marJuright1" data-target=".bs-example-modal-sm1" data-toggle="modal">取 消</button> -->
+								<button class="btn btn-primary" id="editOK">保 存</button>
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/jquery-3.2.1.js"></script>
+	<script src="js/jquery.hotkeys.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-wysiwyg.js"></script>
+	<script src="js/wysiwygInit.js"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+			initToolbarBootstrapBindings();
+			$('#editor').wysiwyg();
+			window.prettyPrint && prettyPrint();
+
+			//确定按钮
+			$('#editOK').click(function() {
+				//获取编辑框内容
+				var data = $('#editor').html();
+				artTi_g = $('#exampleInputName2').val();
+
+				if ('' == artTi_g) {
+					alert('请输入文章标题');
+					return;
+				}
+				if ('' == typId_g) {
+					alert('请先选择文章分类');
+					return;
+				}
+
+				$.ajax({
+					type : "POST",
+					url : "title",
+					data : {
+						"title" : artTi_g,
+						"articleId" : artId_g,
+						"typeId" : typId_g,
+						"data" : data
+					},
+					success : function(data) {
+						var json = $.parseJSON(data);
+						if ("1" == json["code"]) {
+							addInit();
+							alert('保存成功');
+						} else {
+							alert("数据访问出错");
+						}
+					},
+					complete : function(XMLHttpRequest, textStatus) {
+				        var sessionstatus = XMLHttpRequest.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus，
+				        if (sessionstatus == "timeout") {
+				            // 如果超时就处理 ，指定要跳转的页面
+				            window.open("login.html","_self")
+				        }
+				    },
+
+					dataType : "text",
+					async : false
+				});
+
+			});
+		});
+
+		//分类点击，显示列表
+		var typId_g = [[${typeId}]];;
+		var artId_g = [[${artId}]];;
+		var artTi_g = [[${title}]];
+		function editInit(typeId, typeName) {
+			typId_g = typeId
+			$("#typeName").text(typeName + "类文章")
+		}
+		/*]]>*/
+		
+		function logout(){
+			$.ajax({
+				type : "GET",
+				url : "userLogout",
+				data : {
+				},
+				success : function(data) {
+					window.open("login.html","_self")
+				},
+				complete : function(XMLHttpRequest, textStatus) {
+			        var sessionstatus = XMLHttpRequest.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus，
+			        if (sessionstatus == "timeout") {
+			            // 如果超时就处理 ，指定要跳转的页面
+			            window.open("login.html","_self")
+			        }
+			    },
+			    complete : function(XMLHttpRequest, textStatus) {
+			        var sessionstatus = XMLHttpRequest.getResponseHeader("sessionstatus"); // 通过XMLHttpRequest取得响应头，sessionstatus，
+			        if (sessionstatus == "timeout") {
+			            // 如果超时就处理 ，指定要跳转的页面
+			            window.open("login.html","_self")
+			        }
+			    },
+				dataType : "json",
+				async : false
+			});
+		}
+		
+		//新增文章按钮
+		function addInit(){
+			$('#exampleInputName2').val('');
+			$('#editor').html('输入内容…');
+			artId_g='';
+		}
+	</script>
+
+</body>
+</html>

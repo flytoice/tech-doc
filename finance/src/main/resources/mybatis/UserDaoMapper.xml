@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.tianrun.finance.pro1.user.dao.UserDao">
+
+	<select id="checkUser" parameterType="com.tianrun.finance.pro1.pojo.UserInfo" resultType="String">
+		select id
+		from userInfos
+		where pwd = #{pwd} and phone= #{phone};
+	</select>
+	
+	<update id="updatePwd" parameterType="com.tianrun.finance.pro1.pojo.UserInfo">
+		update userInfos
+		set pwd = #{pwd}
+		where id=#{id} and phone=#{phone};
+	</update>
+	<insert id="addUser" parameterType="com.tianrun.finance.pro1.pojo.UserInfo">
+		insert into userInfos(staffId,phone,pwd) 
+		values(#{staffId},#{phone},#{pwd});
+	</insert>
+</mapper>
